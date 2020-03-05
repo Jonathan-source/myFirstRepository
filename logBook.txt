@@ -1,0 +1,54 @@
+Ex-vis 
+•Datum : 14/2
+•Kalle Karlsson
+•Implementerade klassen X, 
+•Uppdaterade klassdiagrammet
+•Löste problemet Y
+•Status: Fastnade på problemet Z
+•Tid: 5 timmar 30 minuter
+•Vid nästa tillfälle: Försöka lösa problemet Z, Testa klasserna X och W, Påbörja klassen Q
+•Tidsplanen har reviderats pga....
+
+------------------------------------
+Datum: 15/2
+Alexander Bruce
+Implementerade Camera classen.
+Löste så användaren kan zooma in och ut med hjälp av scrollhjulet. Användaren
+kan även styra kameran med hjälp av piltagenterna. 
+Tid 2 timmar 20 minuter.
+Vid nästa tillfälle: Lägga till så att användaren kan även förflytta kameran genom att ha musen mot en av fönstrets kanter.
+------------------------------------
+Datum 16/2
+Alexander Bruce
+La till så att camera klassen ser till att view håller aspectioRatio 16:9
+Fastnade på att när Resize event händer så uppdaterades den frekvent istället för efter resize.
+Fixade temporärt med att sätta in en else statement, skulle vilja fixa det på ett bättre sätt
+så det inte kallas i onödan.
+Tid 1 timme 30 minuter
+Vid nästa tillfälle försöka lösa det problemet samt lägga till så att kameran sköter renderingen för världen, samt renderingsDistance.
+------------------------------------
+Datum 16/2
+Jonathan Helsing
+Implementation av map classp, där worldmap laddas in i en array från en text-fil. 
+TID: 2 timmar 
+Vid nästa tillfälle bör denna kunna ritas ut av kameran.
+------------------------------------
+Datum 17/2
+Alexander Bruce
+Förflyttade drawmap() över till kameran, som nu sköter vilken del av kartan som ska ritas ut på skärmen, Även en renderingsDistance
+som gör att programmet inte ritar ut mer en vad spelaren kommer att se.
+Tid 3 timmar 10 minuter.
+Vid nästa tillfälle försöka få till så att spelaren kan styra kameran med hjälp av musen.
+------------------------------------
+Datum 21/2
+Alexander Bruce
+Implementation av kamera förflyttning nu möjlig med musen, la även till en valmöjlighet i menyn att kunna ändra kamerans känslighet.
+och att det sparas i en txt fil.
+TID: 2 timmar 10 mins
+Vid nästa tillfälle bör jag börja med Villagers och hantering av dom enheterna.
+------------------------------------
+
+
+
+
+
