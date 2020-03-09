@@ -47,6 +47,14 @@ och att det sparas i en txt fil.
 TID: 2 timmar 10 mins
 Vid nästa tillfälle bör jag börja med Villagers och hantering av dom enheterna.
 ------------------------------------
+Datum 3/2-3/4
+Alexander Bruce
+Implentation av Villagers, Implementation av Villagershandler, Implementation av Villager profiles. Implementation av enhetsstyrning av Villagers och
+Implementation av namn med hjälp av txt fil.
+TID: 18 timmar och 13 Minuter (cirka 6 timmar per dag)
+vid nästa tillfälle fortsätta arbeta på Villagerprofiles(göra klart alla traits...) samt eventuellt på börja jobba med fiender enheter.
+--------------------------------------
+
 
 
 

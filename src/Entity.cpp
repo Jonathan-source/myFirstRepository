@@ -1,22 +1,33 @@
 #include "Entity.h"
 
-
 Entity::Entity()
 	:speed(5.0f), health(100), attackDmg(10)
 {
-	texture.loadFromFile("assets/Farmer.png");	//TEMPORARLY UNTIL ASSETMANAGER IS DONE
-	texture2.loadFromFile("assets/FarmerSelected.png");	//TEMPORARLY UNTIL ASSETMANAGER IS DONE
-	sprite.setTexture(texture);
+	//texture.loadFromFile("assets/Farmer.png");	//TEMPORARLY UNTIL ASSETMANAGER IS DONE
+	//texture2.loadFromFile("assets/FarmerSelected.png");	//TEMPORARLY UNTIL ASSETMANAGER IS DONE
 	sprite.setPosition(0, 0);
 }
 
-Entity::Entity(float _speed, int _health, int _attackDmg)
+Entity::Entity(sf::Texture& _texture)
+	:speed(5.0f), health(100), attackDmg(10)
+{
+	this->sprite.setTexture(_texture);
+	this->sprite.setPosition(0, 0);
+}
+
+Entity::Entity(float _speed, int _health, int _attackDmg, sf::Texture& _texture)
 	:speed(_speed), health(_health), attackDmg(_attackDmg)
 {
-	texture.loadFromFile("assets/Farmer.png");	//TEMPORARLY UNTIL ASSETMANAGER IS DONE
-	texture2.loadFromFile("assets/FarmerSelected.png");	//TEMPORARLY UNTIL ASSETMANAGER IS DONE
-	sprite.setTexture(texture);
+	sf::IntRect rectSprite(0, 0, 64, 64);
+	this->sprite.setTexture(_texture);
+	rectSprite.left += 64;
+	this->sprite.setTextureRect(rectSprite);
+	sprite.setTexture(_texture);
 	sprite.setPosition(0, 0);
+}
+
+Entity::~Entity()
+{
 }
 
 float Entity::getSpeed() const
@@ -58,17 +69,6 @@ void Entity::setAttackDmg(int _attackDmg)
 {
 	this->attackDmg = _attackDmg;
 }
-
-void Entity::setSelectTexture()
-{
-	this->sprite.setTexture(texture2);
-}
-
-void Entity::setNormalTexture()
-{
-	this->sprite.setTexture(texture);
-}
-
 void Entity::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(this->sprite);

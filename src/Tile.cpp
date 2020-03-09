@@ -5,7 +5,7 @@ Tile::Tile(int id, float x, float y, sf::Texture &texture)
 	this->sprite.setTexture(texture);
 	this->sprite.setPosition(sf::Vector2f(x, y));		
 	this->type = id;
-	this->isCollidable = false;
+	this->isOccupied = false;
 	this->isVisible = true;
 }
 
@@ -19,14 +19,21 @@ int Tile::getType() const
 	return this->type;
 }
 
+
+
 sf::Vector2f Tile::getPosition() const
 {
 	return this->sprite.getPosition();
 }
 
-bool Tile::getIsCollidable() const
+bool Tile::getIsOccupied() const
 {
-	return this->isCollidable;
+	return this->isOccupied;
+}
+
+void Tile::setIsOccupied(bool status)
+{
+	this->isOccupied = status;
 }
 
 bool Tile::getIsVisible() const

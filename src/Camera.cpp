@@ -103,7 +103,7 @@ void Camera::drawMap(sf::RenderWindow &window)
         int tempX = 0;
         int tempY = 0;
 
-            for (int y = (viewCenY - (renderDistance)); y <= ((viewCenY + (renderDistance))); y++)
+        for (int y = (viewCenY - (renderDistance)); y <= ((viewCenY + (renderDistance))); y++)
             {
                 tempY = y;
 

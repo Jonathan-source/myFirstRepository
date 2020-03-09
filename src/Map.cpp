@@ -5,9 +5,6 @@ Map::Map()
 	for (int row = 0; row < this->mapHeight; row++)
 		for (int column = 0; column < this->mapWidth; column++)
 			this->mapArray[column][row] = nullptr;
-	
-
-	std::cout << "[Map]: Object successfully created.\n";
 }
 
 void Map::loadMap(std::string fileName, ResourceManager<sf::Texture, TextureID>* t)
@@ -73,9 +70,8 @@ void Map::loadMap(std::string fileName, ResourceManager<sf::Texture, TextureID>*
 				}
 		myfile.close();	 
   		}
-	std::cout << "\n[Map]: Map has been loaded. " << tileCounter << " tiles were successfully created.\n";
+	std::cout << "\n[Map]: Map has been loaded. " << tileCounter << " tiles were successfully allocated.\n";
 }
-
 Map::~Map()
 {
 	int num = 0;
@@ -87,12 +83,22 @@ Map::~Map()
 			}
 		}
 	}
-	std::cout << "[Map]: " << num << " tiles were sucessfully deleted.\n";		
+	std::cout << "[Map]: " << num << " tiles were sucessfully de-allocated.\n";		
 }
 
 Tile* Map::getTileAt(int x, int y)
 {
 	return mapArray[x][y];
+}
+
+void Map::setTileToUsed(int x, int y)
+{
+	this->mapArray[x][y]->setIsOccupied(true);
+}
+
+int Map::getTileTypeAt(int x, int y) const
+{
+	return this->mapArray[x][y]->getType();
 }
 
 sf::Vector2i Map::getMapSize() const

@@ -9,7 +9,7 @@ private:
 	static const int size = 64; // 64x64 in pixels	
 	sf::Sprite sprite;
 	int type;
-	bool isCollidable;
+	bool isOccupied;
 	bool isVisible;
  public:
     Tile(int id, float x, float y, sf::Texture& texture);
@@ -17,9 +17,10 @@ private:
 
     int getType() const;
     sf::Vector2f getPosition() const;
-	bool getIsCollidable() const;
+	bool getIsOccupied() const;
 	bool getIsVisible() const;
 	void setVisibility(bool option);
+	void setIsOccupied(bool status);
 
 	// Inherited via Drawable
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

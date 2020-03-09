@@ -1,9 +1,10 @@
 #include "VillagerHandler.h"
 
-VillagerHandler::VillagerHandler()
-	:capacity(10), nrOfActive(0), hasDonefirstIteration(false)
+VillagerHandler::VillagerHandler(sf::Texture &_texture)
+	:capacity(10), nrOfActive(0), hasDonefirstIteration(false), isVillagerSelected(false)
 {
-
+	srand(time(NULL));
+	farmerTexture = &_texture;
 	sf::Color white2 = sf::Color(255, 255, 255, 15);
 
 	for (int i = 0; i < 4; i++)
@@ -11,23 +12,41 @@ VillagerHandler::VillagerHandler()
 		quad[i] = sf::Vertex(sf::Vector2f(0, 0));
 		quad[i].color = white2;
 	}
-	spawnPos = (sf::Vector2i(0, 0));
+
+	spawnPos = (sf::Vector2i(256, 0));
 	villagers = new Villager * [capacity] {nullptr};
+
 	for (int i = 0; i < 3; i++)
 	{
-		villagers[i] = new Villager();
+		villagers[i] = new Villager(4,100,10, _texture);
 		nrOfActive++;
 		villagers[i]->setPosition(spawnPos.x+=64, spawnPos.y+=10);	//TODO Change this <-
 	}
 }
 
+VillagerHandler::~VillagerHandler()
+{
+	int num = 0;
+	for (int i = 0; i < capacity; i++)
+	{
+		if(villagers[i] != nullptr)
+		{
+			delete villagers[i];
+			num++;
+		}
+	}
+	std::cout << "[VillageHandler]: " << num << " villagers were de-allocated.\n";
+	delete[] villagers;
+}
+
+
 void VillagerHandler::spawnAVillager()
 {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::B) && nrOfActive <= capacity)
+	if (nrOfActive <= capacity)
 	{
-		villagers[nrOfActive] = new Villager();
+		villagers[nrOfActive] = new Villager(*farmerTexture);
 		villagers[nrOfActive++]->setPosition(spawnPos.x, spawnPos.y);
-		printf("Spawned a villager\n");
+		std::cout << "[VillageHandler]: A villager were allocated.\n";
 	}
 }
 
@@ -41,6 +60,14 @@ void VillagerHandler::freeMemory()
 
 }
 
+void VillagerHandler::resourceTick(GUI* _gui)
+{
+	for (int i = 0; i < nrOfActive; i++)
+	{
+		villagers[i]->callResourceTick(_gui);
+	}
+}
+
 int VillagerHandler::getNrOfActive()
 {
 	return nrOfActive;
@@ -51,10 +78,16 @@ int VillagerHandler::getCapacity()
 	return capacity;
 }
 
+Villager** VillagerHandler::getVillagerList() const
+{
+	return villagers;
+}
+
 void VillagerHandler::moveAllVillagers()
 {
 	for (int i = 0; i < nrOfActive; i++) {
 		villagers[i]->move();
+		villagers[i]->updateImage(); //SHOW CORRECT IMAGE SO VILLAGER FACE CORRECT DIRECTION
 	}
 }
 
@@ -66,60 +99,34 @@ void VillagerHandler::drawAllVillagers(sf::RenderWindow& window)
 	window.draw(this->quad, 4, sf::Quads);
 }
 
-//selectionBoxUpdate only used inside the class!
-void VillagerHandler::selectionBoxUpdate(sf::RenderWindow& window, sf::Vector2f &mousePos)
+void VillagerHandler::selectVillager(sf::RenderWindow& window, sf::Event &event, float yPos)
 {
-	if (!hasDonefirstIteration)
+	firstMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	bool foundOne = false;
+
+	for (int i = 0; i < this->nrOfActive && !foundOne; i++)
 	{
-		hasDonefirstIteration = true;
-		firstMousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-		quad[0].position = sf::Vector2f(firstMousePosition);
-
-	}
-
-	quad[1].position = sf::Vector2f((float)firstMousePosition.x, (float)mousePos.y);
-	quad[2].position = (sf::Vector2f((float)mousePos.x, (float)mousePos.y));
-	quad[3].position = (sf::Vector2f((float)mousePos.x, (float)firstMousePosition.y));
-}
-
-void VillagerHandler::selectVillager(sf::RenderWindow& window)
-{
-	if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		hasDonefirstIteration = false; //resets when button released;;
-		for (int i = 0; i < 4; i++)
+		// Check if any button contain the mouse-pointer.
+		if (villagers[i]->getBoundingBox().contains(firstMousePosition.x, firstMousePosition.y))
 		{
-			quad[i].position = sf::Vector2f(0, 0);
-		}
-	}
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-	{
-		sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));;
-
-		selectionBoxUpdate(window, mousePos);
-
-		float sizeX = (float)mousePos.x - (float)firstMousePosition.x;
-		float sizeY = (float)mousePos.y - (float)firstMousePosition.y;
-		bool foundOne = false;
-		for (int i = 0; i < nrOfActive; i++)
-		{
-			if (mousePos.x >= villagers[i]->getPosition().x && mousePos.x <= (villagers[i]->getPosition().x + villagers[i]->getGlobalBounds().width)
-				&& mousePos.y <= villagers[i]->getPosition().y + villagers[i]->getGlobalBounds().height && mousePos.y >= villagers[i]->getPosition().y
-				|| villagers[i]->getGlobalBounds().intersects(sf::FloatRect((sf::Vector2f)firstMousePosition, sf::Vector2f(sizeX, sizeY))))
+			for (int y = 0; y < nrOfActive; y++)
 			{
-				if (!foundOne) 
-				{
-					villagers[i]->setIfSelected(true);
-					villagers[i]->setSelectTexture();
-					foundOne = true;
-				}
+				villagers[y]->setIfSelected(false);
 			}
-			else
+			// Then check if left button is pressed.
+			if (event.type == sf::Event::MouseButtonPressed &&
+				event.mouseButton.button == sf::Mouse::Left)
 			{
-				villagers[i]->setIfSelected(false);
-				villagers[i]->setNormalTexture();
+				villagers[i]->toggleSelect();
+				foundOne = true;
+				//Button is being pressed, check and perform button action.
 			}
 		}
+		else if (firstMousePosition.y < yPos)
+		{
+			villagers[i]->setIfSelected(false);
+		}
+		
 	}
 }
 
@@ -130,6 +137,7 @@ void VillagerHandler::setVillagerMoveToTarget(sf::RenderWindow& window)
 		for (int i = 0; i < nrOfActive; i++)
 		{	
 			if (villagers[i]->getIfSelected()) {
+			
 				//creating a normalized vector to move villager on X & Y
 				villagers[i]->setMouseTargetPos(window.mapPixelToCoords(sf::Mouse::getPosition(window)));
 				//std::cout << std::to_string(mouseTargetPos.x) << " . " << std::to_string(mouseTargetPos.x) << std::endl;
@@ -160,6 +168,11 @@ void VillagerHandler::setVillagerMoveToTarget(sf::RenderWindow& window)
 	}
 }
 
+void VillagerHandler::setVillagerToGather(int _position)
+{
+	villagers[_position]->setIsGathering(true);
+}
+
 void VillagerHandler::collideWithVillagers()
 {
 	for (int y = 0; y < nrOfActive; y++)
@@ -178,14 +191,39 @@ void VillagerHandler::collideWithVillagers()
 	}
 }
 
+bool VillagerHandler::checkIfSelected()
+{
+	this->isVillagerSelected = false;
+	for (int i = 0; i < nrOfActive; i++) 
+	{
+		if (villagers[i]->getIfSelected()) 
+		{
+			this->isVillagerSelected = true;
+		}		
+	}
+	return this->isVillagerSelected;
+}
+
 void VillagerHandler::showVillagersProfil(Camera& _camera)
 {
-	for (int i = 0; i < nrOfActive; i++) {
-		if (villagers[i]->getIfSelected()) {
+	for (int i = 0; i < nrOfActive; i++) 
+	{
+		if (villagers[i]->getIfSelected()) 
+		{
 			villagers[i]->showProfil(_camera);
-		}
+		}		
 	}
+}
 
+sf::Vector2f VillagerHandler::getPositionOfSelectedVillager() const
+{
+	for (int i = 0; i < nrOfActive; i++) 
+	{
+		if (villagers[i]->getIfSelected()) 
+		{
+			return villagers[i]->getPosition();
+		}		
+	}
 }
 
 inline void VillagerHandler::normalized (sf::Vector2f& res, const sf::Vector2f& v)

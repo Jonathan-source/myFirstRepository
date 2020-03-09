@@ -9,8 +9,6 @@ class Entity : public sf::Drawable
         int health;
         int attackDmg;
     //SPRITE
-        sf::Texture texture;
-        sf::Texture texture2;
      protected:
      sf::Sprite sprite;
 
@@ -18,7 +16,9 @@ class Entity : public sf::Drawable
 
         //CONSTRUCT
         Entity();
-        Entity(float _speed, int health, int attackDmg);
+        Entity(sf::Texture &_texture);
+        Entity(float _speed, int health, int attackDmg, sf::Texture& _texture);
+        ~Entity();
         //GET FUNC
         float getSpeed() const;
         int getHealth() const;
@@ -30,13 +30,11 @@ class Entity : public sf::Drawable
         void setHealth(int _health);
         void setAttackDmg(int _attackDmg);
 
-        void setSelectTexture();
-        void setNormalTexture();
         //MOVE
         virtual void move() = 0;
 
         //DRAW
-        virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const = 0;
+        virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const override;
 
  };
 

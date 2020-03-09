@@ -17,7 +17,14 @@
 
 
 int main()
-{
+{	
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	std::cout << "===============================\n";
+	std::cout << "======== STARTING GAME ========\n";
+	std::cout << "===============================\n";
+	
+	srand(time(NULL));
+
 	// Window
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Nocturnal Invasion");
 	GameState *current = nullptr;
@@ -25,7 +32,6 @@ int main()
 	
 	current = new Menu(window);
 	currentState = State::MENU;
-
 	while (currentState != State::EXIT && window.isOpen())
 	{
 		current->handleEvents();
@@ -49,7 +55,10 @@ int main()
 		current->render();
 	}
 
-	delete current;
+	std::cout << "===============================\n";
+	std::cout << "======== CLOSING GAME =========\n";
+	std::cout << "===============================\n";
 
+	delete current;
 	return 0;
 }

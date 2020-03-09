@@ -5,5 +5,8 @@ enum class TextureID {
 	Water,
 	Farmer,
 	FarmerSelected,
+	House,
+	Tree,
+	TreeCutted,
 };
 #endif

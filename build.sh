@@ -7,11 +7,13 @@ while [ $appRunning == 1 ]; do
 	read user
 
 	if [[ $user == 1 ]]; then
+		tput reset
 		echo Compiling and then running ...
 		g++ -c src/*.cpp -std=c++14 -Werror
 		g++ *.o -o bin/Game -lsfml-graphics -lsfml-window -lsfml-system
 		./bin/Game
 	elif [[ $user == 2 ]]; then
+		tput reset
 		echo Compiling ...
 		g++ -c src/*.cpp -std=c++14 -Werror
 		g++ *.o -o bin/Game -lsfml-graphics -lsfml-window -lsfml-system
